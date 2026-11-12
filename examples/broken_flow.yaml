@@ -1,0 +1,43 @@
+# The same idea with the mistakes flow-lint is built to catch.
+flow: update-address-draft
+start: welcome
+
+steps:
+  welcome:
+    type: message
+    say: I can help you change the address we hold for you.
+    next: ask_signed_in
+
+  ask_signed_in:
+    type: question
+    say: Are you signed in? Do you have your new postcode ready?
+    options:
+      - match: [yes]
+        next: ask_postcode
+      - match: [no]
+        next: sign_in_help
+
+  ask_postcode:
+    type: question
+    say: What is your new postcode?
+    next: confirm
+    no_match:
+      say: Sorry, what is your new postcode?
+
+  confirm:
+    type: question
+    say: Is that right?
+    options:
+      - match: [no]
+        next: ask_postcode
+    no_match:
+      say: Is that right?
+      then: confirm
+
+  saved:
+    type: message
+    say: We have changed your address.
+
+  old_survey:
+    type: end
+    say: Thanks for your feedback.

@@ -1,0 +1,70 @@
+# A flow for changing a home address with a made-up pension provider.
+# Brightwater Pensions is not a real company.
+flow: update-address
+start: welcome
+
+steps:
+  welcome:
+    type: message
+    say: I can help you change the address we hold for you.
+    next: ask_signed_in
+
+  ask_signed_in:
+    type: question
+    say: Are you signed in to your account?
+    options:
+      - match: [yes, yeah, yep, i am]
+        next: ask_postcode
+      - match: [no, nope, not]
+        next: sign_in_first
+    no_match:
+      say: Sorry, I need a yes or no. Are you signed in to your account?
+      max_retries: 1
+      then: handover
+
+  sign_in_first:
+    type: end
+    say: You need to sign in before you can change your address. Come back to this chat when you have signed in.
+
+  ask_postcode:
+    type: question
+    say: What is your new postcode?
+    capture: postcode
+    pattern: "[A-Z]{1,2}[0-9][0-9A-Z]? ?[0-9][A-Z]{2}"
+    next: ask_first_line
+    no_match:
+      say: That does not look like a UK postcode. It should look like SR2 7AB. What is your new postcode?
+      max_retries: 2
+      then: handover
+
+  ask_first_line:
+    type: question
+    say: What is the first line of your new address?
+    capture: first_line
+    pattern: ".{3,}"
+    next: confirm
+    no_match:
+      say: I need the house number and street, like 12 High Street. What is the first line of your new address?
+      max_retries: 1
+      then: handover
+
+  confirm:
+    type: question
+    say: "Your new address starts {first_line}, {postcode}. Is that right?"
+    options:
+      - match: [yes, yeah, yep, correct, right]
+        next: done
+      - match: [no, nope, wrong]
+        next: ask_postcode
+    no_match:
+      say: Sorry, I need a yes or no. Is the address right?
+      max_retries: 1
+      then: handover
+
+  done:
+    type: end
+    say: Thank you. We have changed your address. We will send a letter to your new address to confirm.
+
+  handover:
+    type: handover
+    say: I am going to pass you to one of our team so they can help. You will not need to repeat what you have told me.
