@@ -2,6 +2,8 @@
 
 Find the dead ends in a chatbot flow before a user does.
 
+![Terminal output: flow-lint finds 10 errors and 3 warnings in a broken dialogue flow, including dead ends and endless retries](docs/demo.png)
+
 You write a dialogue flow as a plain text file. The tool checks it for mistakes, lets you walk through it with test answers and draws it as a diagram.
 
 ## The problem it solves
